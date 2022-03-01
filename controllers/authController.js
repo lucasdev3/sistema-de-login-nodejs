@@ -15,7 +15,7 @@ exports.register = async (req, res) => {
         let passHash = await bcryptjs.hash(pass, 8)
         //console.log(passHash)
 
-        connection.query('INSERT INTO users SET ?', {user: user, name: name, pass: passHash}, (error, results) => {
+        connection.query('INSERT INTO users_new SET ?', {user: user, name: name, pass: passHash}, (error, results) => {
             if(error) {
                 console.log(error);
             }else {
@@ -44,8 +44,9 @@ exports.login = async (req, res) => {
                 ruta: 'login'
             })
         }else {
-            connection.query('SELECT * FROM users WHERE user = ?', [user], async (error, results) => {
+            connection.query('SELECT * FROM users_new WHERE user = ?', [user], async (error, results) => {
                 if ( results.length == 0 || !(await bcryptjs.compare(pass, results[0].pass)) ) {
+                    console.log(error)
                     res.render('login', {
                         alert: true,
                         alertTitle: "Atenção",
@@ -90,7 +91,7 @@ exports.isAuthenticated = async (req, res, next) => {
     if (req.cookies.jwt) {
         try {
             const decoficada = await promisify(jwt.verify)(req.cookies.jwt, process.env.JWT_SECRETO)
-            connection.query('SELECT * FROM users WHERE id = ?', [decoficada.id], (error, results) => {
+            connection.query('SELECT * FROM users_new WHERE id = ?', [decoficada.id], (error, results) => {
                 if (!results) {
                     return next()
                 }else {
