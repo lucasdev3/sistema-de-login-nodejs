@@ -21,7 +21,7 @@ dotenv.config({path: './env/.env'});
 app.use(cookieParser());
 
 // chamando as rotas
-app.use('/', require(__dirname + '/./routes/router'));
+app.use('/', require(__dirname + '/routes/router'));
 
 // Para eliminar o cache e para que não se possa voltar com o botão de voltar do navegador quando fazemos o Logout
 app.use(function (req, res, next) {
